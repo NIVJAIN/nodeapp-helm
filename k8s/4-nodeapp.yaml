@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeapp
+  labels:
+    app: nodeapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeapp
+  template:
+    metadata:
+      labels:
+        app: nodeapp
+    spec:
+      containers:
+      - name: nodeapp
+        # image: nodeapp
+        image : nivjain/k8s-nodeapp:v1
+        readinessProbe:
+          httpGet: 
+            path: /
+            port: 5000
+        resources:
+          requests:
+            memory: 300Mi
+            cpu: 100m
+          # limits:
+            # memory: 500Mi # if you set a limit and the contaner exceeds the limit, the container will be killed but the pod remains, the contaner therefor try to restart itlesf, memory leaks are very difficult to trace.
+            # cpu: 200m # if the actual cpu usage of the container exceeds at run time , the cpu will be clamped but the container will continue to run, it can do throttling.
+        ports:
+        - containerPort: 5000
+        env: # const db = `mongodb://${process.env.ME_CONFIG_MONGODB_ADMINUSERNAME}:${process.env.ME_CONFIG_MONGODB_ADMINPASSWORD}@${process.env.ME_CONFIG_MONGODB_SERVER}:27017/pod?authSource=admin`;
+            #              mongodb://username:password@mongodb-service:27017/undefined?authSource=admin
+        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-username
+        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-root-password
+        - name: ME_CONFIG_MONGODB_DATABASE_NAME
+          valueFrom:
+              secretKeyRef:
+                name: mongodb-secret
+                key: mongo-database-name
+        - name: ME_CONFIG_MONGODB_SERVER
+          valueFrom:
+              configMapKeyRef:
+                name: mongodb-configmap
+                key: database_url
+        - name: MONGO_URL
+          valueFrom:
+              configMapKeyRef:
+                name: mongodb-configmap
+                key: database_url
+        volumeMounts:
+          - name: nodeapp-conf
+            mountPath: /nodeapp/config
+          - name: nodeapp-secret
+            mountPath: /nodeapp/secret  
+
+          - name: nodeapp-conf2
+            mountPath: /app/env
+          - name: nodeapp-secret2
+            mountPath: /app/secret  
+          - name: nodejs-env-file
+            mountPath: /app/.env
+          - name: nodejs-secret
+            mountPath: /app/.secret2
+            readOnly: true
+      volumes:
+        - name: nodeapp-conf
+          configMap:
+            name: nodeapp-configmap-file
+        - name: nodeapp-secret
+          secret:
+            secretName: nodeapp-secret-file  
+
+        - name: nodeapp-conf2
+          configMap:
+            name: nodeapp-configmap-file
+        - name: nodeapp-secret2
+          secret:
+            secretName: nodeapp-secret-file2   
+            items:
+            - key: "env.ganache"
+              path: "env.ganache"
+            - key: "env.ropsten"
+              path: "env.ropsten"
+            - key: "env.besu"
+              path: "env.besu"
+        - name: nodejs-env-file
+          configMap:
+            name: nodejs-env
+        - name: nodejs-secret
+          secret:
+            secretName: nodeapp
+
+
+
+#NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeapp-service
+spec:
+  selector:
+    app: nodeapp
+  # type: LoadBalancer
+  type: NodePort
+  # type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 30000
+
+
+# # ClusterIP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: nodeapp-service
+# spec:
+#   selector:
+#     app: nodeapp
+#   # type: LoadBalancer
+#   # type: NodePort
+#   type: ClusterIP
+#   ports:
+#     - protocol: TCP
+#       port: 5000
+#       targetPort: 5000
+#       # nodePort: 30000

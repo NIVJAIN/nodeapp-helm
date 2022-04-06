@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nodeapp-configmap-file
+data:
+  env.file: |
+    BESU_URL:"localhost:8545"
+    BESU_URL2:aHR0cDovL2xvY2FsaG9zdDo4NTQ1
+    PORT:"9000"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nodeapp-secret-file
+type: Opaque
+data:
+  secret.file: |
+    c29tZXN1cGVyc2VjcmV0IGZpbGUgY29udGVudHMgbm9ib2R5IHNob3VsZCBzZWU=
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nodeapp-secret-file2
+type: Opaque
+data:
+  mongo-root-username: dXNlcm5hbWU=
+  mongo-root-password: cGFzc3dvcmQ=
+  mongo-database-name: cG9k
+  env.ganache: |
+    R0FOQUNIRTpodHRwOi8vbG9jYWxob3N0Ojc1NDU=
+  env.ropsten: |
+    Uk9QU1RFTjpodHRwOi8vbG9jYWxob3N0Ojk1NDU=
+  env.besu: |
+    QkVTVTpodHRwOi8vbG9jYWxob3N0Ojk1NDU=
+
+# echo -n 'GANACHE:http://localhost:7545' | base64
+# echo -n 'ROPSTEN:http://localhost:9545' | base64
+# echo -n 'BESU:http://localhost:9545' | base64
+
+#  kubectl create secret generic nodeapp --from-file=.env
+#  kubectl get secret
+#  kubectl describe secret nodeapp
+
+#  kubectl create configmap nodejs-env --from-file=.env
+#  kubectl get configmap
+#  kubectl describe cm nodejs-env
+
+
+#   volumeMounts:
+#     - name: nodejs-env-file
+#       mountPath: /app/.env
+#     - name: nodejs-secret
+#       mountPath: /app/.secret2
+#       readOnly: true
+# volumes:
+#   - name: nodejs-env-file
+#     configMap:
+#       name: nodejs-env // kubectl get cm && kubectl describe <nodejs-env>
+#   - name: nodejs-secret
+#     secret:
+#       secretName: nodeapp // kubectl get secret && kubectl describe <nodeapp>
