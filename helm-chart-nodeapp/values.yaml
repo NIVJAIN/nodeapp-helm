@@ -96,24 +96,27 @@ extraVolumeMountsWorking: |
     jain: {{ .Release.Name }}-keycloak
    readOnly: true
 
-extraVolumes22: |
+extraVolumes: |
  - name: nodejs-env-file
    configMap:
     name: {{ .Release.Name }}-configmap
  - name: nodejs-env-file2
    configMap:
-   name: {{ .Release.Name }}-configmap
+    name: {{ .Release.Name }}-configmap
 
-extraVolumes: |
+extraVolumes22: |
  - name: nodejs-env-file
    configMap:
     name: {{ .Release.Name }}-configmap
 
-extraVolumeMounts: |
+
+
+extraVolumeMounts222: |
  - name: nodejs-env-file
    mountPath: /app/.env
+   readOnly: true
 
-extraVolumeMounts2: |
+extraVolumeMounts: |
  - name: nodejs-env-file
    mountPath: /app/.env
  - name: nodejs-env-file2
