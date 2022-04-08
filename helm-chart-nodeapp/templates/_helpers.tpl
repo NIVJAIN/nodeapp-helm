@@ -4,6 +4,7 @@ Expand the name of the chart.
 {{- define "helm-chart-nodeapp.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
+{{- define "myChart.someParam" -}}someval-{{ .Release.Namespace }}{{- end -}}
 
 {{/*
 Create a default fully qualified app name.

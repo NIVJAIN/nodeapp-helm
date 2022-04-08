@@ -60,3 +60,6 @@ data:
 #   - name: nodejs-secret
 #     secret:
 #       secretName: nodeapp // kubectl get secret && kubectl describe <nodeapp>
+
+    # volumes:
+        # {{- toYaml .Values.volumesAndMounts.volumes | nindent 8 -}}

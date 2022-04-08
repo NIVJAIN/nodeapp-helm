@@ -36,12 +36,8 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.port.number }}
+              containerPort: 5000
               protocol: TCP
-          env:
-            {{- with .Values.mongodbSecret }}
-            {{- tpl . $ | nindent 12 }}
-            {{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -51,11 +47,9 @@ spec:
               path: /
               port: http
           volumeMounts:
-            {{- with .Values.extraVolumeMounts }}
-            {{- tpl . $ | nindent 12 }}
-            {{- end }}
+            {{- toYaml .Values.volumesAndMounts.volumesMounts | nindent 12 }}
           resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -69,34 +63,19 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        {{- with .Values.extraVolumes }}
-        {{- tpl . $ | nindent 8 }}
-        {{- end }}
-
-  
-
-    
+      {{- toYaml .Values.volumesAndMounts.volumes | nindent 8 -}}
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-{{/*
-# volumeMounts:
-# {{- toYaml .Values.volumesAndMounts.volumesMounts | nindent 12 }}
-
-# volumes2:
-# {{- toYaml .Values.volumesAndMounts.volumes | nindent 8 -}}
- */}}
+# 
+      
+      # volumes:
+      #   - name: nodeapp-conf
+      #     configMap:
+      #       name: {{ .Release.Name }}-configmap
+      #   - name: nodeapp-secret
+      #     secret:
+      #       secretName: {{ .Release.Name }}-secret

@@ -4,4 +4,30 @@ metadata:
   name: {{ .Release.Name }}-configmap
 data:
   database_url: mongodb-service
-  default.conf: {{.Files.Get "files/default.conf" | printf "%s" | indent 4}}
+  {{- $files := .Files }}
+  {{- range $key, $value := .Files }}
+  {{- if hasPrefix "config-dir/" $key }} {{/* only when in config-dir/ */}}
+  {{ $key | trimPrefix "config-dir/" }}: {{ $files.Get $key | quote }} {{/* adapt $key as desired */}}
+  {{- end }}
+  {{- end }}
+  jain.conf: {{.Files.Get "files/default.conf" | printf "%s" | indent 4}}
+ 
+
+ {{/*
+ 
+   items:
+    {{- range $key, $val := .Values.kv }}
+      - key: {{ $key }}
+        fromKey:
+          MONGODB: {{ $val }}
+        path: {{ $val }}
+    {{- end }}
+ 
+ 
+ 
+  */}}
+
+
+
+
+

@@ -28,12 +28,8 @@ kind: ConfigMap
 metadata:
   name: dd-configmap
 data:
-  database_url: mongodb-service 
-  default.conf: "server {\n    listen       80;\n    server_name  localhost;\n\n    location / {\n        proxy_pass http://rancher.com/;\n    }\n\n    error_page   500 502 503 504  /50x.html;\n    location = /50x.html {\n        root   /usr/share/nginx/html;\n    }\n}"  
-  env1: "ENV=1\nPORT=9000\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://localhost:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n"  
-  env2: "ENV=2\nPORT=9000\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://localhost:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n"  
-  env3: "ENV=3\nPORT=9000\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://localhost:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n" 
-  jain.conf:     server {
+  database_url: mongodb-service
+  default.conf:     server {
         listen       80;
         server_name  localhost;
     
@@ -106,33 +102,6 @@ spec:
             - name: http
               containerPort: 5000
               protocol: TCP
-          env:
-            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-              valueFrom:
-                 secretKeyRef:
-                   name: dd-secret
-                   key: mongo-root-username
-            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-              valueFrom:
-                 secretKeyRef:
-                   name: dd-secret
-                   key: mongo-root-password
-            - name: ME_CONFIG_MONGODB_DATABASE_NAME
-              valueFrom:
-                 secretKeyRef:
-                   name: dd-secret
-                   key: mongo-database-name
-            - name: ME_CONFIG_MONGODB_SERVER
-              valueFrom:
-                 configMapKeyRef:
-                   name: dd-configmap
-                   key: database_url
-            - name: MONGO_URL
-              valueFrom:
-                 configMapKeyRef:
-                   name: dd-configmap
-                   key: database_url
-            
           livenessProbe:
             httpGet:
               path: /
@@ -141,19 +110,30 @@ spec:
             httpGet:
               path: /
               port: http
+          # volumeMounts:
+          #   - name: nodeapp-conf
+          #     mountPath: /nodeapp/config
+          #   - name: nodeapp-secret
+          #     mountPath: /nodeapp/secret 
           volumeMounts:
-            - name: nodejs-env-file
-              mountPath: /app/.env
-            - name: nodejs-env-file2
-              mountPath: /app/.env2
-              readOnly: true
-            
+          - mountPath: /a
+            name: mount-0
+          - mountPath: /b
+            name: mount-1
           resources:
             {}
       volumes:
-        - name: nodejs-env-file
-          configMap:
-           name: dd-configmap
-        - name: nodejs-env-file2
-          configMap:
-          name: dd-configmap
+      - hostPath:
+         path: /tmp
+        name: mount-0
+      - hostPath:
+         path: /tmp
+        name: mount-1
+      
+      # volumes:
+      #   - name: nodeapp-conf
+      #     configMap:
+      #       name: dd-configmap
+      #   - name: nodeapp-secret
+      #     secret:
+      #       secretName: dd-secret
