@@ -1,0 +1,20 @@
+---
+# Source: tutorial-helm/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-name-configmap
+data:
+   items:
+      - key: KEY1
+        fromKey:
+          MONGODB: V1
+        path: V1
+      - key: KEY2
+        fromKey:
+          MONGODB: V2
+        path: V2
+      - key: KEY3
+        fromKey:
+          MONGODB: v3
+        path: v3

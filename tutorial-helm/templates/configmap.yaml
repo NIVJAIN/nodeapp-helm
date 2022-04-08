@@ -1,0 +1,103 @@
+# {{- define "mychart.systemlables" }}
+#   labelsW:
+#     name: Ashok Kumar
+#     place: Hyderabad
+#     website: www.waytoeasylearn.com
+# {{- end }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+{{- template "mychart.systemlables" $ }}
+{{ include "mychart.version" $ | indent 4 }}
+  labels:
+    {{- with .Values.tags }}
+      first: {{ .programming }}
+      second: {{ .devops }}
+      third: {{ .deployment }}
+    {{- end}}
+      helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+      app.kubernetes.io/instance: "{{ $.Release.Name }}"
+      app.kubernetes.io/version: "{{ $.Chart.AppVersion }}"
+      app.kubernetes.io/managed-by: "{{ $.Release.Service }}"
+data:
+  myvalue: "Sample Config Map"
+  message: {{ .Values.message }}
+  website: {{ upper .Values.website }}
+  ownerName: {{ quote .Values.owner.name }}
+  ownerPlace: {{ quote .Values.owner.place }}
+
+  items3:
+   {{- range $key, $val := .Values.secretMaps }}
+      - name: {{ $val.name }}
+        valueFrom:
+          {{- if $val.valueFrom.secretKeyRef }}
+          secretKeyRef:
+          {{- range $k, $v := $val.valueFrom.secretKeyRef }}
+            {{ $k }}: {{ $v }}
+          {{- end }}
+          {{- end}}
+          {{- if $val.valueFrom.configMapKeyRef }}
+          configMapKeyRef:
+          {{- range $k2, $v2 := $val.valueFrom.configMapKeyRef }}
+            {{ $k2 }}: {{ $v2 }}
+          {{- end }}
+          {{- end}}
+    {{- end }}
+  items:
+    {{- range $key, $val := .Values.kv }}
+    - key: {{ $key }}
+      fromKey:
+        MONGODB: {{ $val }}
+      path: {{ $val }}
+    {{- end }}
+  LanguagesUsed: |-
+    {{- range .Values.LangUsed }}
+    - {{ . | title | quote }}
+    {{- end }}
+  LanguagesUsed: |-
+    {{- range $index, $topping := .Values.LangUsed }}
+     - {{ $index }} : {{ $topping }}
+    {{- end }}
+{{ include "mychart.version" $ | indent 2 }}
+
+  ownerName: {{ quote .Values.owner.name }}
+  ownerPlace: {{ quote .Values.owner.place }}
+  {{- if eq .Values.owner.name "Vinsod Kumar"}}
+  isNamePresent: true 
+  {{ else }}
+  isNamePreset: false
+  {{- end }}
+
+  env:
+  {{- range $k, $v := .Values.label1 }}
+  {{- if kindIs "string" $v }}
+    - name: {{ $k }}
+      value: {{ $v }}
+  {{- else }}
+    - name2: {{ $v.name }}
+      value2: {{ $v.value }}
+    - k: {{ $k }}
+      v: {{ $v }}
+  {{- end }}
+  {{- else }}
+    []
+  {{- end }}
+
+
+ {{/*
+   items:
+    {{- range $key, $val := .Values.kv }}
+      - key: {{ $key }}
+        fromKey:
+          MONGODB: {{ $val }}
+        path: {{ $val }}
+    {{- end }}
+ 
+  */}}
+
+
+
+
+

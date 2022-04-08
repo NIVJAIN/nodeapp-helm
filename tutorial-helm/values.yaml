@@ -1,43 +1,6 @@
-# Default values for helm-chart-nodeapp.
+# Default values for tutorial-helm.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-image:
-  # repository: nginx
-  repository: nivjain/k8s-nodeapp:v1
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
-
-volumes:
-  - name: mount-vol0
-    hostPath:
-      path: /tmp
-  - name: mount-vol1
-    hostPath:
-      path: /tmp
-
-volumesAndMounts2:
-  volumes:
-  - name: mount-0
-    hostPath:
-      path: /tmp
-  - name: mount-1
-    hostPath:
-      path: /tmp
-  volumesMounts:
-    - mountPath: /a
-      name: mount-0
-    - mountPath: /b
-      name: mount-1
-
-port:
-  number: 5000
-
-
 
 volumesAndMounts:
   volumes:
@@ -52,91 +15,77 @@ volumesAndMounts:
       mountPath: /app/.env
     - name: nodejs-env-file2
       mountPath: /app/.env2
-
-
-
-mongodbSecret: |
- - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-   valueFrom:
-      secretKeyRef:
-        name: {{ .Release.Name }}-secret
-        key: mongo-root-username
- - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-   valueFrom:
-      secretKeyRef:
-        name: {{ .Release.Name }}-secret
-        key: mongo-root-password
- - name: ME_CONFIG_MONGODB_DATABASE_NAME
-   valueFrom:
-      secretKeyRef:
-        name: {{ .Release.Name }}-secret
-        key: mongo-database-name
- - name: ME_CONFIG_MONGODB_SERVER
-   valueFrom:
-      configMapKeyRef:
-        name: {{ .Release.Name }}-configmap
-        key: database_url
- - name: MONGO_URL
-   valueFrom:
-      configMapKeyRef:
-        name: {{ .Release.Name }}-configmap
-        key: database_url
-
-extraVolumes2: |
- — name: custom-secret
-   secret:
-    secretName: {{ .Release.Name }}-keycloak
-extraVolumesWorking: |
- - name: custom-secret
-   secret:
-    secretName: {{ .Release.Name }}-keycloak
-   vv: jj
-extraVolumeMountsWorking: |
- - name: custom-secret
-   mountPath: "/realm/"
-   abc:
-    jain: {{ .Release.Name }}-keycloak
-   readOnly: true
-
-extraVolumes: |
- - name: nodejs-env-file
-   configMap:
-    name: {{ .Release.Name }}-configmap
- - name: nodejs-env-file2
-   configMap:
-    name: {{ .Release.Name }}-configmap
-
-extraVolumes22: |
- - name: nodejs-env-file
-   configMap:
-    name: {{ .Release.Name }}-configmap
-
-
-
-extraVolumeMounts222: |
- - name: nodejs-env-file
-   mountPath: /app/.env
-   readOnly: true
-
-extraVolumeMounts: |
- - name: nodejs-env-file
-   mountPath: /app/.env
- - name: nodejs-env-file2
-   mountPath: /app/.env2
-   readOnly: true
-
-
 kv:
   KEY1: V1
   KEY2: V2
   KEY3: v3
+message: "Welcome to waytoeasylearn"
+website: "www.waytoeasylearn.com"
+owner:
+  name: Vinod Kumar
+  place: Hyderabad
+  qualification: mca
+tags:
+  programming: java
+  devops: kubernetes
+  deployment: helm
+  bigdata: hadoop
+LangUsed:
+  - Java
+  - Python
+  - Ruby
+  - Scala 
+label1:
+  - fook:
+    name: foo
+    value: foo1
+  - bark:
+    name: bar
+    value: bar2
 
+secretMaps:
+ - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+   valueFrom:
+      secretKeyRef:
+        name: dd-secret
+        key: mongo-root-username
+ - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+   valueFrom:
+      secretKeyRef:
+        name: dd-secret
+        key: mongo-root-password
+ - name: ME_CONFIG_MONGODB_DATABASE_NAME
+   valueFrom:
+      secretKeyRef:
+        name: dd-secret
+        key: mongo-database-name
+ - name: ME_CONFIG_MONGODB_SERVER
+   valueFrom:
+      configMapKeyRef:
+        name: dd-configmap
+        key: database_url
+ - name: MONGO_URL
+   valueFrom:
+      configMapKeyRef:
+        name: dd-configmap
+        key: database_url
 
-extraEnv: |
- — name: KEYCLOAK_LOGLEVEL
-   value: DEBUG
- — name: HOSTNAME
-   value: {{ .Release.Name }}-keycloak
+envVars:
+  var1: 'sdfsdfsdf'
+  var2: 'efwefwefwef'
+
+envVarsSecret:
+  var3:
+      secretKeyRef: my-secret
+      key: key
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -166,7 +115,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 5000
+  port: 80
 
 ingress:
   enabled: false
