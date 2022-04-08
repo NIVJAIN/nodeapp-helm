@@ -4,7 +4,7 @@
 #     place: Hyderabad
 #     website: www.waytoeasylearn.com
 # {{- end }}
-
+  {{- $rel  := .Release.Name -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -27,21 +27,23 @@ data:
   website: {{ upper .Values.website }}
   ownerName: {{ quote .Values.owner.name }}
   ownerPlace: {{ quote .Values.owner.place }}
+  release : {{ .Release.Name }}
 
   items3:
+  
    {{- range $key, $val := .Values.secretMaps }}
       - name: {{ $val.name }}
         valueFrom:
           {{- if $val.valueFrom.secretKeyRef }}
           secretKeyRef:
           {{- range $k, $v := $val.valueFrom.secretKeyRef }}
-            {{ $k }}: {{ $v }}
+            {{ $k }}: {{ $rel }}-{{ $v }}
           {{- end }}
           {{- end}}
           {{- if $val.valueFrom.configMapKeyRef }}
           configMapKeyRef:
           {{- range $k2, $v2 := $val.valueFrom.configMapKeyRef }}
-            {{ $k2 }}: {{ $v2 }}
+            {{ $k2 }}: {{ $rel }}-{{ $v2 }}
           {{- end }}
           {{- end}}
     {{- end }}

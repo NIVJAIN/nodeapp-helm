@@ -1,16 +1,14 @@
 ---
 # Source: tutorial-helm/templates/configmap.yaml
-#
-
-apiVersion: v1
+#apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: release-name-configmap
+  name: dd-configmap
   labels:
     name: AshokKumar
     place: Hyderabad
     website: www.waytoeasylearn.com
-    app.kubernetes.io/instance: "release-name"
+    app.kubernetes.io/instance: "dd"
     app.kubernetes.io/version: "1.16.0"
     app.kubernetes.io/managed-by: "Helm"
     app_name: tutorial-helm
@@ -20,7 +18,7 @@ metadata:
       second: kubernetes
       third: helm
       helm.sh/chart: "tutorial-helm-0.1.0"
-      app.kubernetes.io/instance: "release-name"
+      app.kubernetes.io/instance: "dd"
       app.kubernetes.io/version: "1.16.0"
       app.kubernetes.io/managed-by: "Helm"
 data:
@@ -29,32 +27,33 @@ data:
   website: WWW.WAYTOEASYLEARN.COM
   ownerName: "Vinod Kumar"
   ownerPlace: "Hyderabad"
+  release : dd
 
   items3:
       - name: ME_CONFIG_MONGODB_ADMINUSERNAME
         valueFrom:
           secretKeyRef:
-            key: mongo-root-username
+            key: dd-mongo-root-username
             name: dd-secret
       - name: ME_CONFIG_MONGODB_ADMINPASSWORD
         valueFrom:
           secretKeyRef:
-            key: mongo-root-password
+            key: dd-mongo-root-password
             name: dd-secret
       - name: ME_CONFIG_MONGODB_DATABASE_NAME
         valueFrom:
           secretKeyRef:
-            key: mongo-database-name
+            key: dd-mongo-database-name
             name: dd-secret
       - name: ME_CONFIG_MONGODB_SERVER
         valueFrom:
           configMapKeyRef:
-            key: database_url
+            key: dd-database_url
             name: dd-configmap
       - name: MONGO_URL
         valueFrom:
           configMapKeyRef:
-            key: database_url
+            key: dd-database_url
             name: dd-configmap
   items:
     - key: KEY1
