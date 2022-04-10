@@ -682,3 +682,18 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+
+helm install my-release \
+--set auth.rootPassword=secretpassword,auth.username=my-user,auth.password=my-password,auth.database=my-database \
+bitnami/mongodb
+
+kubectl run --namespace default ee-mongodb-client --rm --tty -i --restart='Never' --env="MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD" --image docker.io/bitnami/mongodb:4.4.13-debian-10-r33 --command -- bash
+mongo admin --host "ee-mongodb" --authenticationDatabase admin -u root -p passw0rd
+
+
+in values.yaml
+username: "jain"
+password: "jainpassword"
+database: "blockchain"
+mongo --host "ee-mongodb" --authenticationDatabase <blockchain this is a db name> -u jain -p jainpassword

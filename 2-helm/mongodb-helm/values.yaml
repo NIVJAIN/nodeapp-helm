@@ -139,7 +139,7 @@ auth:
   ## @param auth.rootPassword MongoDB(&reg;) root password
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
   ##
-  rootPassword: ""
+  rootPassword: passw0rd
   ## MongoDB(&reg;) custom users and databases
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-users-and-databases-on-first-run
   ## @param auth.usernames List of custom users to be created during the initialization
@@ -152,9 +152,9 @@ auth:
   ## @param auth.username DEPRECATED: use `auth.usernames` instead
   ## @param auth.password DEPRECATED: use `auth.passwords` instead
   ## @param auth.database DEPRECATED: use `auth.databases` instead
-  username: ""
-  password: ""
-  database: ""
+  username: "username"
+  password: "password"
+  database: "blockchain"
   ## @param auth.replicaSetKey Key used for authentication in the replicaset (only when `architecture=replicaset`)
   ##
   replicaSetKey: ""
@@ -638,7 +638,7 @@ service:
 externalAccess:
   ## @param externalAccess.enabled Enable Kubernetes external cluster access to MongoDB(&reg;) nodes (only for replicaset architecture)
   ##
-  enabled: false
+  enabled: true
   ## External IPs auto-discovery configuration
   ## An init container is used to auto-detect LB IPs or node ports by querying the K8s API
   ## Note: RBAC might be required
@@ -1700,3 +1700,6 @@ metrics:
     ##       summary: High request latency
     ##
     rules: {}
+
+
+

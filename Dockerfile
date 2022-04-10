@@ -7,13 +7,14 @@ ENV PATH /app/node_modules/.bin:$PATH
 WORKDIR /app
 
 # ENV
-ENV PORT 9000
-ENV HOST 0.0.0.0
-
+# ENV PORT 5000
+# ENV HOST 0.0.0.0
+# ENV DB_URL 'mongodb://root:passw0rd@localhost:27017/blockchain?authSource=admin' 
+# ENV ENV_FILE_NAME '.env.dev'
 COPY . ./
 RUN yarn install
 #RUN yarn build
 
 # start
 EXPOSE 9000
-CMD yarn start server.js
+CMD yarn run dev
