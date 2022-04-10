@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-configmap
 data:
   database_url: mongodb-service
-  db_url: "mongodb://username:password@mongodb-service:27017/pod?authSource=admin"
+  db_url: {{ .Values.mongodbUrl.mongodbHelmUrl }}
   database_url2: ee-mongodb
   database_url3: "ee-mongodb.default.svc.cluster.local"
   # database_url: "10.106.54.65"
@@ -15,6 +15,7 @@ data:
   {{- if hasPrefix "config-dir/" $key }} {{/* only when in config-dir/ */}}
   {{ $key | trimPrefix "config-dir/" }}: {{ $files.Get $key | quote }} {{/* adapt $key as desired */}}
   {{- end }}
+
   {{- end }}
   jain.conf: {{.Files.Get "files/default.conf" | printf "%s" | indent 4}}
   .env.dev: {{.Files.Get "files/env1" | quote }}

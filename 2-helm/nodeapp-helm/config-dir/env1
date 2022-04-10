@@ -1,0 +1,6 @@
+ENV=1
+DB_URL=mongodb://root:passw0rd@localhost:27017/dotenv?authSource=admin
+PORT=9000
+BESU_URL="http://localhost:8545"
+GANACHE_URL="http://localhost:8545"
+MONGODB_URL="mongodb://127.0.0.1:27017/blockchain?"

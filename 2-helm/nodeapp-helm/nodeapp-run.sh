@@ -1,0 +1,1 @@
+helm install nodeapp . -f nodeapp-values.yaml
