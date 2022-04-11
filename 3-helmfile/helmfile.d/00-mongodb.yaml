@@ -23,7 +23,7 @@ helmDefaults:
 
 releases:
   ##################################
-  # Genesis
+  # MongoDB installation
   ##################################
   - name: mongodb
     labels:

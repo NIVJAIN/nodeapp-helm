@@ -23,7 +23,7 @@ helmDefaults:
 
 # Path to the helmfile state file being processed BEFORE releases in this state file
 helmfiles:
-  - ./helmfile.d/00-genesis.yaml
+  - ./helmfile.d/00-mongodb.yaml
 
 
 releases:
