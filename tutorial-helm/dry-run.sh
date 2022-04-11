@@ -1,0 +1,1 @@
+helm template . > temp.yaml

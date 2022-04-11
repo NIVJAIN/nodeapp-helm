@@ -50,6 +50,7 @@ const db =  process.env.DB_URL || "mongodb://username:password@localhost:27017/p
 // const db = 'mongodb://username:password@localhost:27017/pod?authSource=admin' // mongo container running via 1-k8s
 console.log("====================================================")
 // console.log("process.env", process.env)
+    console.log("GANACHE_URL ", process.env.GANACHE_URL)
 console.log("====================================================")
 console.log("Database==URL", db)
 const options = {

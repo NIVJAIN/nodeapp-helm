@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   # repository: nginx
   # repository: nivjain/k8s-nodeapp:v1
-  repository: nivjain/nodeapp-helm:v3
+  repository: nivjain/nodeapp-helm:v5
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

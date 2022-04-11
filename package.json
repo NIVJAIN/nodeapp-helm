@@ -8,8 +8,8 @@
     "local": "node server.js .env.prod",
     "dev": "node server.js",
     "prod": "node server.js",
-    "docker:build": "docker build -t nivjain/nodeapp-helm:v3 .",
-    "docker:push": "docker push nivjain/nodeapp-helm:v3",
+    "docker:build": "docker build -t nivjain/nodeapp-helm:v5 .",
+    "docker:push": "docker push nivjain/nodeapp-helm:v5",
     "docker:rune": "docker run -p 9000:5000 -e DB_URL=mongodb://root:passw0rd@localhost:27017/blockjjain?authSource=admin nivjain/nodeapp-helm:v1",
     "docker:run": "docker run -p 9000:5000 nivjain/nodeapp-helm:v1",
     "helm:install": "helm install dd helm-chart-nodeapp "

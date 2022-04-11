@@ -1,0 +1,96 @@
+---
+# Source: tutorial-helm/templates/configmap.yaml
+#apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-name-configmap
+  labels:
+    name: AshokKumar
+    place: Hyderabad
+    website: www.waytoeasylearn.com
+    app.kubernetes.io/instance: "release-name"
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: "Helm"
+    app_name: tutorial-helm
+    app_version: "0.1.0"
+  labels:
+      first: java
+      second: kubernetes
+      third: helm
+      helm.sh/chart: "tutorial-helm-0.1.0"
+      app.kubernetes.io/instance: "release-name"
+      app.kubernetes.io/version: "1.16.0"
+      app.kubernetes.io/managed-by: "Helm"
+data:
+  myvalue: "Sample Config Map"
+  message: Welcome to waytoeasylearn
+  website: WWW.WAYTOEASYLEARN.COM
+  ownerName: "Vinod Kumar"
+  ownerPlace: "Hyderabad"
+  release : release-name
+
+  items3:
+      - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+        valueFrom:
+          secretKeyRef:
+            key: release-name-mongo-root-username
+            name: release-name-secret
+      - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: release-name-mongo-root-password
+            name: release-name-secret
+      - name: ME_CONFIG_MONGODB_DATABASE_NAME
+        valueFrom:
+          secretKeyRef:
+            key: release-name-mongo-database-name
+            name: release-name-secret
+      - name: ME_CONFIG_MONGODB_SERVER
+        valueFrom:
+          configMapKeyRef:
+            key: release-name-database_url
+            name: release-name-configmap
+      - name: MONGO_URL
+        valueFrom:
+          configMapKeyRef:
+            key: release-name-database_url
+            name: release-name-configmap
+  items:
+    - key: KEY1
+      fromKey:
+        MONGODB: V1
+      path: V1
+    - key: KEY2
+      fromKey:
+        MONGODB: V2
+      path: V2
+    - key: KEY3
+      fromKey:
+        MONGODB: v3
+      path: v3
+  LanguagesUsed: |-
+    - "Java"
+    - "Python"
+    - "Ruby"
+    - "Scala"
+  LanguagesUsed: |-
+     - 0 : Java
+     - 1 : Python
+     - 2 : Ruby
+     - 3 : Scala
+  app_name: tutorial-helm
+  app_version: "0.1.0"
+
+  ownerName: "Vinod Kumar"
+  ownerPlace: "Hyderabad"
+  isNamePreset: false
+
+  env:
+    - name2: foo
+      value2: foo1
+    - k: 0
+      v: map[fook:<nil> name:foo value:foo1]
+    - name2: bar
+      value2: bar2
+    - k: 1
+      v: map[bark:<nil> name:bar value:bar2]

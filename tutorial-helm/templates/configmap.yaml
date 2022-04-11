@@ -30,8 +30,7 @@ data:
   release : {{ .Release.Name }}
 
   items3:
-  
-   {{- range $key, $val := .Values.secretMaps }}
+    {{- range $key, $val := .Values.secretMaps }}
       - name: {{ $val.name }}
         valueFrom:
           {{- if $val.valueFrom.secretKeyRef }}
