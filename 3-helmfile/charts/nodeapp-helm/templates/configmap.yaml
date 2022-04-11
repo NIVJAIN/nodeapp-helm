@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  database_url: mongodb-service
+  db_url: {{ .Values.mongodbUrl.mongodbHelmUrl }}
+  database_url2: ee-mongodb
+  database_url3: "ee-mongodb.default.svc.cluster.local"
+  # database_url: "10.106.54.65"
+  # database_url: "mongodb://root:passw0rd@localhost:27017/dotenvdev?authSource=admin"
+  env_file_name: "env1"
+  {{- $files := .Files }}
+  {{- range $key, $value := .Files }}
+  {{- if hasPrefix "config-dir/" $key }} {{/* only when in config-dir/ */}}
+  {{ $key | trimPrefix "config-dir/" }}: {{ $files.Get $key | quote }} {{/* adapt $key as desired */}}
+  {{- end }}
+
+  {{- end }}
+  jain.conf: {{.Files.Get "files/default.conf" | printf "%s" | indent 4}}
+  .env.dev: {{.Files.Get "files/env1" | quote }}
+  .env.prod: {{.Files.Get "files/env1" | quote }}
+ 
+
+ {{/*
+ 
+   items:
+    {{- range $key, $val := .Values.kv }}
+      - key: {{ $key }}
+        fromKey:
+          MONGODB: {{ $val }}
+        path: {{ $val }}
+    {{- end }}
+ 
+ 
+ 
+  */}}
+
+
+
+
+

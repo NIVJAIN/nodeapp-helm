@@ -1,0 +1,187 @@
+---
+# Source: helm-chart-nodeapp/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: release-name-helm-chart-nodeapp
+  labels:
+    helm.sh/chart: helm-chart-nodeapp-0.1.0
+    app.kubernetes.io/name: helm-chart-nodeapp
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: helm-chart-nodeapp/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: release-name-secret
+type: Opaque
+data:
+  # mongo-root-username: cm9vdAo=
+  # mongo-root-password: cGFzc3cwcmQK
+  # mongo-database-name: YmxvY2tjaGFpbgo=
+  mongo-root-username: dXNlcm5hbWU=
+  mongo-root-password: cGFzc3dvcmQ=
+  mongo-database-name: cG9k
+
+
+  # mongo-root-username: dXNlcm5hbWU= echo dXNlcm5hbWU= | base64 --decode = username
+  # mongo-root-password: cGFzc3dvcmQ= echo cGFzc3dvcmQ= | base64 --decode = password
+  # mongo-database-name: cG9k echo cG9k | base64 --decode = pod
+---
+# Source: helm-chart-nodeapp/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-name-configmap
+data:
+  database_url: mongodb-service
+  db_url: mongodb://root:password@mongodb:27017/pod?authSource=admin
+  database_url2: ee-mongodb
+  database_url3: "ee-mongodb.default.svc.cluster.local"
+  # database_url: "10.106.54.65"
+  # database_url: "mongodb://root:passw0rd@localhost:27017/dotenvdev?authSource=admin"
+  env_file_name: "env1" 
+  default.conf: "server {\n    listen       80;\n    server_name  localhost;\n\n    location / {\n        proxy_pass http://rancher.com/;\n    }\n\n    error_page   500 502 503 504  /50x.html;\n    location = /50x.html {\n        root   /usr/share/nginx/html;\n    }\n}"  
+  env1: "ENV=1\nDB_URL=mongodb://root:passw0rd@localhost:27017/dotenv?authSource=admin\nPORT=9000\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://ropsten.infura.jain:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n"  
+  env2: "ENV=2\nPORT=9000\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://localhost:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n"  
+  env3: "ENV=3\nPORT=9000\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://localhost:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n" 
+  jain.conf:     server {
+        listen       80;
+        server_name  localhost;
+    
+        location / {
+            proxy_pass http://rancher.com/;
+        }
+    
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
+  .env.dev: "ENV=1\nPORT=9000\nDB_URL=\"mongodb://root:passw0rd@localhost:27017/dotenvdevenv1?authSource=admin\"\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://ropsten.infura:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n"
+  .env.prod: "ENV=1\nPORT=9000\nDB_URL=\"mongodb://root:passw0rd@localhost:27017/dotenvdevenv1?authSource=admin\"\nBESU_URL=\"http://localhost:8545\"\nGANACHE_URL=\"http://ropsten.infura:8545\"\nMONGODB_URL=\"mongodb://127.0.0.1:27017/blockchain?\"\n"
+---
+# Source: helm-chart-nodeapp/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-helm-chart-nodeapp
+  labels:
+    helm.sh/chart: helm-chart-nodeapp-0.1.0
+    app.kubernetes.io/name: helm-chart-nodeapp
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  ports:
+    - port: 9000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: helm-chart-nodeapp
+    app.kubernetes.io/instance: release-name
+---
+# Source: helm-chart-nodeapp/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-helm-chart-nodeapp
+  labels:
+    helm.sh/chart: helm-chart-nodeapp-0.1.0
+    app.kubernetes.io/name: helm-chart-nodeapp
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: helm-chart-nodeapp
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      annotations:
+         checksum/config: d6c61b5bb54b69c4a9ba4bc146a3237ee64a2dc497059636ca9e077f4977a61d
+      labels:
+        app.kubernetes.io/name: helm-chart-nodeapp
+        app.kubernetes.io/instance: release-name
+    spec:
+      serviceAccountName: release-name-helm-chart-nodeapp
+      securityContext:
+        {}
+      containers:
+        - name: helm-chart-nodeapp
+          securityContext:
+            {}
+          # image: "nivjain/nodeapp-helm:v5:1.16.0"
+          image: "nivjain/nodeapp-helm:v5"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9000
+              protocol: TCP
+          env:
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              valueFrom:
+                 secretKeyRef:
+                   name: release-name-secret
+                   key: mongo-root-username
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              valueFrom:
+                 secretKeyRef:
+                   name: release-name-secret
+                   key: mongo-root-password
+            - name: ME_CONFIG_MONGODB_DATABASE_NAME
+              valueFrom:
+                 secretKeyRef:
+                   name: release-name-secret
+                   key: mongo-database-name
+            - name: ME_CONFIG_MONGODB_SERVER
+              valueFrom:
+                 configMapKeyRef:
+                   name: release-name-configmap
+                   key: database_url
+            - name: MONGO_URL
+              valueFrom:
+                 configMapKeyRef:
+                   name: release-name-configmap
+                   key: database_url
+            - name: DB_URL
+              valueFrom:
+                 configMapKeyRef:
+                   name: release-name-configmap
+                   key: db_url
+            - name: ENV_FILE_NAME
+              valueFrom:
+                 configMapKeyRef:
+                   name: release-name-configmap
+                   key: env_file_name
+            
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: nodejs-env-file
+              mountPath: /app/env
+            - name: nodejs-env-file2
+              mountPath: /app/.env2
+              readOnly: true
+            
+          resources:
+            {}
+      volumes:
+        - name: nodejs-env-file
+          configMap:
+           name: release-name-configmap
+        - name: nodejs-env-file2
+          configMap:
+           name: release-name-configmap

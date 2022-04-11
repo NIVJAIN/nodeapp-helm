@@ -1,0 +1,228 @@
+# Default values for helm-chart-nodeapp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  # repository: nginx
+  # repository: nivjain/k8s-nodeapp:v1
+  repository: nivjain/nodeapp-helm:v5
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  
+mongodbUrl:
+  mongodbHelmUrl: "mongodb://root:password@mongodb:27017/pod?authSource=admin"
+  mongodbK8sUrl: "mongodb://root:password@mongodb-service:27017/pod?authSource=admin"
+
+volumes:
+  - name: mount-vol0
+    hostPath:
+      path: /tmp
+  - name: mount-vol1
+    hostPath:
+      path: /tmp
+
+port:
+  number: 9000
+
+# ClusterIP NodePort
+service:
+  type: NodePort
+  port: 9000
+
+
+volumesAndMounts:
+  volumes:
+  - name: nodejs-env-file
+    configMap:
+      name: dd-configmap
+  - name: nodejs-env-file2
+    configMap:
+      name: dd-configmap
+  volumesMounts:
+    - name: nodejs-env-file
+      mountPath: /app/.env
+    - name: nodejs-env-file2
+      mountPath: /app/.env2
+
+mongodbSecret: |
+ - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+   valueFrom:
+      secretKeyRef:
+        name: {{ .Release.Name }}-secret
+        key: mongo-root-username
+ - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+   valueFrom:
+      secretKeyRef:
+        name: {{ .Release.Name }}-secret
+        key: mongo-root-password
+ - name: ME_CONFIG_MONGODB_DATABASE_NAME
+   valueFrom:
+      secretKeyRef:
+        name: {{ .Release.Name }}-secret
+        key: mongo-database-name
+ - name: ME_CONFIG_MONGODB_SERVER
+   valueFrom:
+      configMapKeyRef:
+        name: {{ .Release.Name }}-configmap
+        key: database_url
+ - name: MONGO_URL
+   valueFrom:
+      configMapKeyRef:
+        name: {{ .Release.Name }}-configmap
+        key: database_url
+ - name: DB_URL
+   valueFrom:
+      configMapKeyRef:
+        name: {{ .Release.Name }}-configmap
+        key: db_url
+ - name: ENV_FILE_NAME
+   valueFrom:
+      configMapKeyRef:
+        name: {{ .Release.Name }}-configmap
+        key: env_file_name
+
+
+
+extraVolumes: |
+ - name: nodejs-env-file
+   configMap:
+    name: {{ .Release.Name }}-configmap
+ - name: nodejs-env-file2
+   configMap:
+    name: {{ .Release.Name }}-configmap
+
+extraVolumeMounts: |
+ - name: nodejs-env-file
+   mountPath: /app/env
+ - name: nodejs-env-file2
+   mountPath: /app/.env2
+   readOnly: true
+
+
+kv:
+  KEY1: V1
+  KEY2: V2
+  KEY3: v3
+
+
+extraEnv: |
+ — name: KEYCLOAK_LOGLEVEL
+   value: DEBUG
+ — name: HOSTNAME
+   value: {{ .Release.Name }}-keycloak
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+
+extraVolumes2: |
+ — name: custom-secret
+   secret:
+    secretName: {{ .Release.Name }}-keycloak
+extraVolumesWorking: |
+ - name: custom-secret
+   secret:
+    secretName: {{ .Release.Name }}-keycloak
+   vv: jj
+extraVolumeMountsWorking: |
+ - name: custom-secret
+   mountPath: "/realm/"
+   abc:
+    jain: {{ .Release.Name }}-keycloak
+   readOnly: true
+
+
+volumesAndMounts2:
+  volumes:
+  - name: mount-0
+    hostPath:
+      path: /tmp
+  - name: mount-1
+    hostPath:
+      path: /tmp
+  volumesMounts:
+    - mountPath: /a
+      name: mount-0
+    - mountPath: /b
+      name: mount-1
+
+extraVolumes22: |
+ - name: nodejs-env-file
+   configMap:
+    name: {{ .Release.Name }}-configmap
+
+
+
+extraVolumeMounts222: |
+ - name: nodejs-env-file
+   mountPath: /app/.env
+   readOnly: true
