@@ -1,0 +1,35 @@
+# @baseUrl=http://localhost:8000
+# @baseUrl=http://hello-world.info
+@baseUrl=http://127.0.0.1:55228
+# @baseUrl=http://jain.hello-world.info
+# @baseUrl=http://localhost:5000
+# Kubernetes url below
+# @baseUrl=http://192.168.64.2:30000 
+# @baseUrl=http://a8eb098a2a00b436f8b04b38e949e62c-1812049375.ap-southeast-1.elb.amazonaws.com
+# @baseUrl=http://a2ef7f8858cd7445ba66f7402eaee1cf-542858087.ap-southeast-1.elb.amazonaws.com
+# @baseUrl=http://nodeapp.vama-dsl.com
+###
+
+###
+GET {{baseUrl}}/
+
+###
+POST {{baseUrl}}/breakfast
+Content-Type: application/json
+
+{
+    "bananas" : 2,
+    "email" : "zsripal.jain@gmail.com",
+    "drink" : "Coffee"
+}
+###
+#  bombardier -c 125 -n 10000000 http://hello-world.info/breakfast/zsripal.jain@gmail.com
+GET {{baseUrl}}/breakfast/zsripal.jain@gmail.com/
+###
+GET http://hello-world.info/breakfast/zsripal.jain@gmail.com
+
+# for ((i=1;i<=100;i++)); do   curl -v --header "Connection: keep-alive" "localhost:8080/user?uuid=52010&model_id=20&attr=0"; done
+for ((i=1;i<=200000;i++)); do   curl -v --header "Connection: keep-alive" "hello-world.info"; done
+
+for ((i=1;i<=200;i++)); do   curl -v --header "Connection: keep-alive" "hello-world.info"; done
+for ((i=1;i<=20000;i++)); do   curl -v --header "Connection: keep-alive" "hello-world.info/breakfast/zsripal.jain@gmail.com/"; done

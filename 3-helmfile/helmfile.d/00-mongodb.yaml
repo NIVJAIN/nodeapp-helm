@@ -32,3 +32,11 @@ releases:
     chart: ../charts/mongodb-helm
     values:
       - ../values/mongodb-values.yaml
+      
+  - name: mongodb2
+    labels:
+      component: genesis
+    namespace: {{ .Namespace }}
+    chart: ../charts/mongodb-helm
+    values:
+      - ../values/mongodb-values.yaml

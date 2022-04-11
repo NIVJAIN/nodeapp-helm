@@ -35,7 +35,11 @@ releases:
     chart: ./charts/nodeapp-helm
     values:
       - ./values/nodeapp-values.yaml
-
+      
+  - name: k8snodeapp
+    chart: ./charts/nodeapp-helm
+    values:
+      - ./values/k8s-values.yaml
 
 # helmfile -n default -f helmfile.yaml apply
 # helmfile -n default -f helmfile.yaml delete --purge
